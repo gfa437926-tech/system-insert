@@ -1,0 +1,367 @@
+/* تنسيقات عامة */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* خلفية الصورة للمديرية */
+.meteorology-bg {
+    background-image: url('meteorology-logo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* تنسيقات الهيدر */
+header {
+    border-bottom: 3px solid #0b5ed7;
+}
+
+.header-logos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.logo {
+    height: 50px;
+}
+
+/* تنسيقات التبويبات */
+.nav-tabs .nav-link {
+    color: #495057;
+    font-weight: 600;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: #0d6efd;
+    color: #0d6efd;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background-color: transparent;
+    border-color: #0d6efd;
+    border-bottom: 3px solid #0d6efd;
+}
+
+/* تنسيقات البطاقات */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* تنسيقات حقول الإدخال */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control, .form-select {
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-hint {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* تنسيقات خاصة بالبطاقات التفاعلية */
+.card-hover {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* تنسيقات الأزرار */
+.btn {
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+
+.btn-purple {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+}
+
+.btn-purple:hover {
+    background-color: #5a3696;
+    border-color: #52308b;
+    color: white;
+}
+
+.control-buttons {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* تنسيقات خاصة بالنتائج المحسوبة */
+.calculated-value {
+    background-color: #e9ecef;
+    padding: 0.75rem;
+    border-radius: 5px;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+}
+
+/* تنسيقات خاصة بالسحب */
+.cloud-description {
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+.cloud-type-select {
+    height: 100px;
+}
+
+/* تنسيقات خاصة بالشعارات */
+.syria-flag {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.meteorology-logo {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* تنسيقات خاصة بالرسوم المتحركة */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* تنسيقات خاصة بالتبويب اليومي */
+.daily-summary-grid {
+    display: grid;
+    grid-gap: 1.5rem;
+}
+
+.daily-summary-item {
+    border-left: 4px solid #0d6efd;
+}
+
+.weather-elements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.section-title {
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* تنسيقات خاصة بالنتائج */
+.result-item {
+    padding: 0.5rem 0;
+}
+
+.result-label {
+    color: #495057;
+}
+
+.result-value {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+/* تنسيقات خاصة بالحقول المطلوبة */
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+/* تنسيقات خاصة بالشاشات الصغيرة */
+@media (max-width: 768px) {
+    .header-logos {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-title {
+        margin: 1rem 0;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .weather-elements-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .control-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+}
+
+/* تنسيقات خاصة للطباعة */
+@media print {
+    .nav-tabs, .control-buttons, .btn {
+        display: none !important;
+    }
+    
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    body {
+        background: none;
+    }
+} 
+/* تحسين شفافية الخلفية */
+.meteorology-bg {
+    background-image: url('meteorology-logo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: rgba(255, 255, 255, 0.85);
+    background-blend-mode: lighten;
+}
+
+/* تنسيقات إضافية للخلفية */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: -1;
+}
+/* تنسيقات خاصة بالحقول المطلوبة */
+.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+/* تنسيقات خاصة بالتحقق من الصحة في القسم اليومي */
+#daily .is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+#daily .invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+/* تأثيرات للتحقق */
+.shake {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}

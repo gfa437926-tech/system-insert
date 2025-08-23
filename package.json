@@ -1,0 +1,24 @@
+{
+  "name": "insert-input",
+  "version": "1.0.0",
+  "description": "",
+  "main": "daily.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.56.0",
+    "pg": "^8.16.3"
+  }
+}
+{
+  "scripts": {
+    "test-connection": "node test-connection.js",
+    "start": "live-server --port=3000",
+    "build": "echo 'No build process needed'"
+  }
+}

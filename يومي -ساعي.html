@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البرنامج - قسم الإرسال الساعي واليومي</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="meteorology-bg">
+    <!-- رأس الصفحة مع الشعارات -->
+    <header class="bg-primary text-white py-3 shadow">
+        <div class="container">
+            <div class="header-logos d-flex justify-content-between align-items-center">
+                <img src="syria-flag.png" alt="شعار الجمهورية العربية السورية" class="logo syria-flag" style="height: 50px;">
+                <div class="header-title text-center">
+                    <h1 class="h3 mb-0">البرنامج - قسم الإرسال الساعي واليومي</h1>
+                    <div id="currentDate" class="small"></div>
+                </div>
+                <img src="meteorology-logo.png" alt="شعار المديرية العامة للأرصاد الجوية" class="logo meteorology-logo" style="height: 50px;">
+            </div>
+        </div>
+    </header>
+
+    <!-- تبويبات التنقل -->
+    <div class="container mt-4">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="hourly-tab" data-bs-toggle="tab" data-bs-target="#hourly" type="button" role="tab" aria-controls="hourly" aria-selected="true">
+                    <i class="fas fa-clock me-2"></i>ساعي
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="daily-tab" data-bs-toggle="tab" data-bs-target="#daily" type="button" role="tab" aria-controls="daily" aria-selected="false">
+                    <i class="fas fa-calendar-day me-2"></i>يومي
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- محتوى التبويبات -->
+    <div class="container tab-content" id="myTabContent">
+        <!-- تبويب الساعي -->
+        <div class="tab-pane fade show active" id="hourly" role="tabpanel" aria-labelledby="hourly-tab">
+            <!-- محتوى الصفحة الساعي (نفس المحتوى الأصلي) -->
+            <div class="py-4">
+                <!-- قسم معلومات المحطة -->
+                <div class="card mb-4 animate-on-scroll" id="station-section">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>معلومات المحطة</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group" id="station-group">
+                                    <label for="station" class="form-label required">اسم المحطة</label>
+                                    <select id="station" class="form-select" required>
+                                        <option value="">اختر المحطة</option>
+                                        <option value="LATA0440" data-name="اللاذقية" data-elevation="7">اللاذقية (LATA0440)</option>
+                                        <option value="KARD1490" data-name="القرداحة" data-elevation="300">القرداحة (KARD1490)</option>
+                                        <option value="HMAM0454" data-name="مطار الباسل ـ حميميم" data-elevation="48">مطار الباسل ـ حميميم (HMAM0454)</option>
+                                        <option value="TART0050" data-name="طرطوس" data-elevation="5">طرطوس (TART0050)</option>
+                                        <option value="SAFI0066" data-name="صافيتا" data-elevation="370">صافيتا (SAFI0066)</option>
+                                        <option value="BAIT2505" data-name="بيت ياشوط ـ عين قيطة" data-elevation="500">بيت ياشوط ـ عين قيطة (BAIT2505)</option>
+                                        <option value="KRAI2535" data-name="الكريم ـ بحوث الغاب" data-elevation="174">الكريم ـ بحوث الغاب (KRAI2535)</option>
+                                        <option value="HAMA0558" data-name="حماة الزراعية" data-elevation="316">حماة الزراعية (HAMA0558)</option>
+                                        <option value="SALM0582" data-name="السلمية" data-elevation="448">السلمية (SALM0582)</option>
+                                        <option value="HOMS0055" data-name="حمص" data-elevation="483">حمص (HOMS0055)</option>
+                                        <option value="DAMA0080" data-name="دمشق الدولي" data-elevation="610">دمشق الدولي (DAMA0080)</option>
+                                        <option value="SWED0067" data-name="السويداء" data-elevation="1015">السويداء (SWED0067)</option>
+                                        <option value="QUNE0076" data-name="القنيطرة" data-elevation="941">القنيطرة (QUNE0076)</option>
+                                        <option value="AINS2970" data-name="عين العرب الجنوبية" data-elevation="1728">عين العرب الجنوبية (AINS2970)</option>
+                                        <option value="ALEP0007" data-name="حلب" data-elevation="393">حلب (ALEP0007)</option>
+                                        <option value="HINH6061" data-name="حينة" data-elevation="1075">حينة (HINH6061)</option>
+                                        <option value="BNBH6108" data-name="بانياس البحرية" data-elevation="0">بانياس البحرية (BNBH6108)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group" id="time-group">
+                                    <label for="observationTime" class="form-label required">توقيت الرصد المحلي</label>
+                                    <input type="text" id="observationTime" class="form-control" required placeholder="أدخل وقت الرصد (00-23)" maxlength="2">
+                                    <!-- إضافة عنصر لعرض التوقيت العالمي -->
+                                    <div id="utcTimeInfo" class="form-text text-info mt-1" style="display: none;">
+                                        التوقيت العالمي: <span id="utcTime">00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group" id="date-group">
+                                    <label for="observationDate" class="form-label required">تاريخ الرصد</label>
+                                    <input type="date" id="observationDate" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group">
+                                    <label for="stationCode" class="form-label">رمز المحطة</label>
+                                    <input type="text" id="stationCode" class="form-control" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group">
+                                    <label for="stationName" class="form-label">اسم المحطة</label>
+                                    <input type="text" id="stationName" class="form-control" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group">
+                                    <label for="elevation" class="form-label">الارتفاع عن سطح البحر (متر)</label>
+                                    <input type="number" id="elevation" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم مصادقة المحطة -->
+                <div class="card mb-4 animate-on-scroll" id="auth-section">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-user-shield me-2"></i>مصادقة المحطة</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group" id="observer-group">
+                                    <label for="observer" class="form-label required">اسم الراصد</label>
+                                    <input type="text" id="observer" class="form-control" placeholder="أدخل اسم الراصد">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group" id="station-password-group">
+                                    <label for="station-password" class="form-label required">كلمة مرور المحطة</label>
+                                    <input type="password" id="station-password" class="form-control" placeholder="أدخل كلمة مرور المحطة">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم القراءات الأساسية -->
+                <div class="card mb-4 animate-on-scroll" id="basic-section">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-thermometer-half me-2"></i>القراءات الأساسية</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group" id="dryTemp-group">
+                                    <label for="dryTemp" class="form-label required">درجة الحرارة الجافة (سْ)</label>
+                                    <input type="text" id="dryTemp" class="form-control" placeholder="أدخل درجة الحرارة الجافة" maxlength="5">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group" id="wetTemp-group">
+                                    <label for="wetTemp" class="form-label required">درجة الحرارة الرطبة (سْ)</label>
+                                    <input type="text" id="wetTemp" class="form-control" placeholder="أدخل درجة الحرارة الرطبة" maxlength="5">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group" id="stationPressure-group">
+                                    <label for="stationPressure" class="form-label required">ضغط المحطة (ميلبار)</label>
+                                    <input type="text" id="stationPressure" class="form-control" placeholder="أدخل ضغط المحطة" maxlength="6">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group" id="stationPressureMSL-group">
+                                    <label for="stationPressureMSL" class="form-label required">ضغط المحطة المحول لسطح البحر (ميلبار)</label>
+                                    <input type="text" id="stationPressureMSL" class="form-control" placeholder="أدخل الضغط المحول" maxlength="6">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <button id="calculateBtn" class="btn btn-primary">
+                                <i class="fas fa-calculator me-2"></i>حساب القيم المشتقة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم النتائج المحسوبة تلقائياً -->
+                <div class="card mb-4 animate-on-scroll" id="results-section">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>النتائج المحسوبة تلقائياً</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <label class="form-label">ضغط بخار الماء (ميلبار)</label>
+                                    <div id="vaporPressureResult" class="form-control calculated-value">لا توجد قيمة</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <label class="form-label">درجة الندى (سْ)</label>
+                                    <div id="dewPointResult" class="form-control calculated-value">لا توجد قيمة</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <label class="form-label">الرطوبة النسبية المحسوبة (%)</label>
+                                    <div id="humidityResult" class="form-control calculated-value">لا توجد قيمة</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <label class="form-label">فرق ضغط بخار الماء عن الإشباع</label>
+                                    <div id="vaporDiffResult" class="form-control calculated-value">لا توجد قيمة</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم بيانات الرياح والرؤية -->
+                <div class="card mb-4 animate-on-scroll" id="wind-section">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-wind me-2"></i>بيانات الرياح والرؤية</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card text-center h-100 card-hover">
+                                    <div class="card-body">
+                                        <h6 class="card-title">اتجاه الرياح السطحية</h6>
+                                        <div class="input-group" id="windDirSurface-group">
+                                            <input type="text" id="windDirSurface" class="form-control text-center" placeholder="00-36" maxlength="2">
+                                        </div>
+                                        <div class="text-muted mt-2">درجة</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card text-center h-100 card-hover">
+                                    <div class="card-body">
+                                        <h6 class="card-title">سرعة الرياح السطحية</h6>
+                                        <div class="input-group" id="windSpeedSurface-group">
+                                            <input type="text" id="windSpeedSurface" class="form-control text-center" placeholder="00-99" maxlength="2">
+                                        </div>
+                                        <div class="text-muted mt-2">م/ثا</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card text-center h-100 card-hover">
+                                    <div class="card-body">
+                                        <h6 class="card-title">اتجاه المتوسط الساعي</h6>
+                                        <div class="input-group" id="windDirMean-group">
+                                            <input type="text" id="windDirMean" class="form-control text-center" placeholder="00-36" maxlength="2">
+                                        </div>
+                                        <div class="text-muted mt-2">درجة</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card text-center h-100 card-hover">
+                                    <div class="card-body">
+                                        <h6 class="card-title">سرعة المتوسط الساعي</h6>
+                                        <div class="input-group" id="windSpeedMean-group">
+                                            <input type="text" id="windSpeedMean" class="form-control text-center" placeholder="00-99" maxlength="2">
+                                        </div>
+                                        <div class="text-muted mt-2">م/ثا</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group" id="visibility-group">
+                                    <label for="visibility" class="form-label">الرؤية السطحية الأفقية (مئات الأمتار)</label>
+                                    <input type="text" id="visibility" class="form-control" placeholder="أدخل الرؤية الأفقية" maxlength="3">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group" id="currentWeather-group">
+                                    <label for="currentWeather" class="form-label">الطقس الحاضر</label>
+                                    <input type="text" id="currentWeather" class="form-control" placeholder="أدخل رمز الطقس الحاضر (رقمين)" maxlength="2">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group" id="pastWeather-group">
+                                    <label for="pastWeather" class="form-label">الطقس الغابر</label>
+                                    <input type="number" id="pastWeather" class="form-control" min="0" max="9" placeholder="أدخل الرمز (0-9)" maxlength="1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم بيانات السحب والتغطية -->
+                <div class="card mb-4 animate-on-scroll" id="cloud-section">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-cloud me-2"></i>بيانات السحب والتغطية</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="cloud-section">
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="input-group" id="cloudCoverTotal-group">
+                                        <label for="cloudCoverTotal" class="form-label">التغطية الكلية للسحب</label>
+                                        <input type="text" id="cloudCoverTotal" class="form-control" placeholder="أدخل التغطية الكلية" maxlength="1">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <!-- الطبقة الأولى -->
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card h-100 card-hover">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">الطبقة الأولى</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="input-group mb-3" id="cloudAmount1-group">
+                                                <label for="cloudAmount1" class="form-label">كمية السحب</label>
+                                                <input type="text" id="cloudAmount1" class="form-control" placeholder="0-8" maxlength="1">
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="cloudType1" class="form-label">نوع السحب</label>
+                                                <select id="cloudType1" class="form-select cloud-type-select">
+                                                    <option value="">اختر نوع السحابة</option>
+                                                    <option value="0">0 - لا يوجد غيوم</option>
+                                                    <option value="cu1">CU1</option>
+                                                    <option value="cu2">CU2</option>
+                                                    <option value="cb3">CB3</option>
+                                                    <option value="sc4">SC4</option>
+                                                    <option value="sc5">SC5</option>
+                                                    <option value="st">ST</option>
+                                                    <option value="f5-fc">F5-FC</option>
+                                                    <option value="sc8-sc">SC8-SC</option>
+                                                    <option value="cb">CB</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="cloudHeight1" class="form-label">ارتفاع السحب (متر)</label>
+                                                <input type="text" id="cloudHeight1" class="form-control" placeholder="ارتفاع السحب" maxlength="3">
+                                            </div>
+                                            <!-- مكان لعرض شرح السحابة -->
+                                            <div id="cloudDescription1" class="cloud-description mt-2 p-2 bg-light rounded" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- الطبقة الثانية -->
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card h-100 card-hover">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">الطبقة الثانية</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="input-group mb-3" id="cloudAmount2-group">
+                                                <label for="cloudAmount2" class="form-label">كمية السحب</label>
+                                                <input type="text" id="cloudAmount2" class="form-control" placeholder="0-8" maxlength="1">
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="cloudType2" class="form-label">نوع السحب</label>
+                                                <select id="cloudType2" class="form-select cloud-type-select">
+                                                    <option value="">اختر نوع السحابة</option>
+                                                    <option value="0">0 - لا يوجد غيوم</option><option value="as1">as1</option>
+                                                    <option value="ns-as1">NS-AS1</option>
+                                                    <option value="ns-as2">NS-AS2</option>
+                                                    <option value="ac2">AC2</option>
+                                                    <option value="ac4">AC4</option>
+                                                    <option value="ac5">AC5</option>
+                                                    <option value="ac6">AC6</option>
+                                                    <option value="ns-as7">NS</option>
+                                                    <option value="ac8">AC8</option>
+                                                    <option value="ac9">AC9</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="cloudHeight2" class="form-label">ارتفاع السحب (متر)</label>
+                                                <input type="text" id="cloudHeight2" class="form-control" placeholder="ارتفاع السحب" maxlength="3">
+                                            </div>
+                                            <!-- مكان لعرض شرح السحابة -->
+                                            <div id="cloudDescription2" class="cloud-description mt-2 p-2 bg-light rounded" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- الطبقة الثالثة -->
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card h-100 card-hover">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">الطبقة الثالثة</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="input-group mb-3" id="cloudAmount3-group">
+                                                <label for="cloudAmount3" class="form-label">كمية السحب</label>
+                                                <input type="text" id="cloudAmount3" class="form-control" placeholder="0-8" maxlength="1">
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <label for="cloudType3" class="form-label">نوع السحب</label>
+                                                <select id="cloudType3" class="form-select cloud-type-select">
+                                                    <option value="">اختر نوع السحابة</option>
+                                                    <option value="0">0 - لا يوجد غيوم</option>
+                                                    <option value="ci1">CI1</option>
+                                                    <option value="ci2">CI2</option>
+                                                    <option value="ci3">CI3</option>
+                                                    <option value="ci4">CI4</option>
+                                                    <option value="cs-ci5">CS-CI5</option>
+                                                    <option value="cs7">CS7</option>
+                                                    <option value="cs8">CS8</option>
+                                                    <option value="cs9">CS9</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="cloudHeight3" class="form-label">ارتفاع السحب (متر)</label>
+                                                <input type="text" id="cloudHeight3" class="form-control" placeholder="ارتفاع السحب" maxlength="3">
+                                            </div>
+                                            <!-- مكان لعرض شرح السحابة -->
+                                            <div id="cloudDescription3" class="cloud-description mt-2 p-2 bg-light rounded" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- الطبقة الرابعة -->
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card h-100 card-hover">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">الطبقة الرابعة</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="input-group" id="cloudAmount4-group">
+                                                <label for="cloudAmount4" class="form-label">كمية السحب</label>
+                                                <input type="text" id="cloudAmount4" class="form-control" placeholder="0-8" maxlength="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- إضافة قسم حسابات السحب الإضافية -->
+                            <div class="row mt-4">
+                                <div class="col-md-4 col-sm-6 mb-3">
+                                    <div class="card h-100 card-hover">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">حسابات السحب الإضافية</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="input-group mb-3">
+                                                <label for="cloudSum12" class="form-label">السحب 1+2</label>
+                                                <input type="text" id="cloudSum12" class="form-control" placeholder="مجموع الطبقتين 1 و 2" maxlength="2">
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="cloudSum123" class="form-label">السحب 1+2+3</label>
+                                                <input type="text" id="cloudSum123" class="form-control" placeholder="مجموع الطبقات 1 و 2 و 3" maxlength="2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم ملخص النتائج -->
+                <div class="card mb-4 border-success animate-on-scroll">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>ملخص النتائج</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="result-item d-flex justify-content-between py-2 border-bottom">
+                            <span class="result-label fw-bold">ضغط بخار الماء:</span>
+                            <span id="summaryVapor" class="result-value">لا توجد قيمة</span>
+                        </div>
+                        <div class="result-item d-flex justify-content-between py-2 border-bottom">
+                            <span class="result-label fw-bold">درجة الندى:</span>
+                            <span id="summaryDew" class="result-value">لا توجد قيمة</span>
+                        </div>
+                        <div class="result-item d-flex justify-content-between py-2 border-bottom">
+                            <span class="result-label fw-bold">الرطوبة النسبية:</span>
+                            <span id="summaryHumidity" class="result-value">لا توجد قيمة</span>
+                        </div>
+                        <div class="result-item d-flex justify-content-between py-2">
+                            <span class="result-label fw-bold">فرق الضغط:</span>
+                            <span id="summaryDiff" class="result-value">لا توجد قيمة</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- قسم تأكيد المسؤولية -->
+                <div class="card mb-4 border-warning animate-on-scroll">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>تأكيد المسؤولية</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">أقر بأنني قمت بإدخال جميع البيانات بدقة وأتحمل المسؤولية الكاملة عن صحة المعلومات المقدمة. كما أتعهد بأن أي خطأ في البيانات سيكون تحت مسؤوليتي الشخصية.</p>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="responsibilityCheckbox" required>
+                            <label class="form-check-label" for="responsibilityCheckbox">
+                                أوافق على تحمل المسؤولية الكاملة عن البيانات المدخلة
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- أزرار التحكم - تم تحسين التنسيق -->
+                <div class="control-buttons d-flex justify-content-center flex-wrap animate-on-scroll">
+                    <button id="sendBtn" class="btn btn-success px-4">
+                        <i class="fas fa-paper-plane me-2"></i>إرسال البيانات
+                    </button>
+                    <button id="downloadDataBtn" class="btn btn-purple px-4">
+                        <i class="fas fa-download me-2"></i>تحميل البيانات
+                    </button>
+                    <button id="resetBtn" class="btn btn-danger px-4">
+                        <i class="fas fa-redo me-2"></i>تعيين النموذج
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب اليومي -->
+        <div class="tab-pane fade" id="daily" role="tabpanel" aria-labelledby="daily-tab">
+            <!-- محتوى الصفحة اليومية -->
+            <div class="py-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h2 class="mb-0"><i class="fas fa-cloud-sun me-2"></i>الملف اليومي للأرصاد الجوية</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- ملخص الأرصاد الجوية اليومي -->
+                        <div class="section" id="daily-summary-section">
+                            <h3 class="mb-4 section-title text-primary">ملخص الأرصاد الجوية اليومي</h3>
+                        <!-- قسم معلومات المحطة والراصد -->
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>معلومات المحطة والراصد</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="dailyStation" class="form-label required">اسم المحطة</label>
+                <select id="dailyStation" class="form-select" required>
+                    <option value="">اختر المحطة</option>
+                    <!-- سيتم ملء الخيارات عبر JavaScript -->
+                </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="dailyObservationDate" class="form-label required">تاريخ الرصد</label>
+                <input type="date" id="dailyObservationDate" class="form-control" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="dailyObservationTime" class="form-label required">وقت الرصد</label>
+                <select id="dailyObservationTime" class="form-select" required>
+                    <!-- سيتم ملء الخيارات عبر JavaScript -->
+                </select>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="dailyStationCode" class="form-label">رمز المحطة</label>
+                <input type="text" id="dailyStationCode" class="form-control" readonly>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="dailyStationName" class="form-label">اسم المحطة</label>
+                <input type="text" id="dailyStationName" class="form-control" readonly>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="dailyElevation" class="form-label">الارتفاع عن سطح البحر (متر)</label>
+                <input type="number" id="dailyElevation" class="form-control" readonly>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="dailyObserver" class="form-label required">اسم الراصد</label>
+                <input type="text" id="dailyObserver" class="form-control" required>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label for="dailyStationPassword" class="form-label required">كلمة مرور المحطة</label>
+                <input type="password" id="dailyStationPassword" class="form-control" required>
+            </div>
+        </div>
+    </div>
+</div>
+                            <div class="daily-summary-grid">
+                                <!-- القيم الصغرى والعظمى -->
+                                <div class="daily-summary-item card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h4 class="mb-0"><i class="fas fa-temperature-high me-2"></i>درجات الحرارة</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="minTemp" class="form-label">القيمة الصغرى النهايات (سْ)</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="minTemp" maxlength="4" placeholder="dd.d" 
+                                                           pattern="[+-]?\d{1,2}\.\d" title="أدخل درجة الحرارة الصغرى بصيغة dd.d">
+                                                    <span class="input-group-text">°C</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="maxTemp" class="form-label">القيمة العظمى النهايات (سْ)</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="maxTemp" maxlength="4" placeholder="dd.d" 
+                                                           pattern="[+-]?\d{1,2}\.\d" title="أدخل درجة الحرارة العظمى بصيغة dd.d">
+                                                    <span class="input-group-text">°C</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- هطول الأمطار -->
+                                <div class="daily-summary-item card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h4 class="mb-0"><i class="fas fa-cloud-rain me-2"></i>الهطول</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="precipitation" class="form-label">الهطول الأقرب عشر الميليمتر</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="precipitation" maxlength="5" placeholder="ddd.d" 
+                                                           pattern="\d{1,3}\.\d" title="أدخل كمية الهطول بصيغة ddd.d">
+                                                    <span class="input-group-text">mm</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 5 مع الفاصلة (ddd.d)</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="snowThickness" class="form-label">أكبر سماكة الثلوج لأقرب سم</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="snowThickness" maxlength="2" placeholder="dd" 
+                                                           pattern="\d{1,2}" title="أدخل سماكة الثلوج بصيغة dd">
+                                                    <span class="input-group-text">cm</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 2 (dd)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- عناصر الطقس -->
+                                <div class="daily-summary-item card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h4 class="mb-0"><i class="fas fa-bolt me-2"></i>عناصر الطقس</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="weather-elements-grid">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="thunderstorm">
+                                                <label class="form-check-label" for="thunderstorm">عواصف رعدية</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="hail">
+                                                <label class="form-check-label" for="hail">برد</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="snow">
+                                                <label class="form-check-label" for="snow">ثلج</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="rain">
+                                                <label class="form-check-label" for="rain">مطر</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="frost">
+                                                <label class="form-check-label" for="frost">صقيع</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="fog">
+                                                <label class="form-check-label" for="fog">ضباب</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="drizzle">
+                                                <label class="form-check-label" for="drizzle">شابورى</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="dustStorm">
+                                                <label class="form-check-label" for="dustStorm">عواصف ترابية أو رملة</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="dust">
+                                                <label class="form-check-label" for="dust">غبار متصاعد</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="haze">
+                                                <label class="form-check-label" for="haze">سديم</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="stormyWind">
+                                                <label class="form-check-label" for="stormyWind">رياح عاصفة</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- التبخر -->
+                                <div class="daily-summary-item card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h4 class="mb-0"><i class="fas fa-tint me-2"></i>التبخر</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="evaporationRecord" class="form-label">مجموع التبخر اليومي لأقرب عشر الميليمتر من السجل</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="evaporationRecord" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل التبخر من السجل بصيغة dd.d">
+                                                    <span class="input-group-text">mm</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="evaporationLeach" class="form-label">مجموع التبخر اليومي لأقرب عشر الميليمتر من مقياس ليش</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="evaporationLeach" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل التبخر من مقياس ليش بصيغة dd.d">
+                                                    <span class="input-group-text">mm</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- سطوع الشمس -->
+                                <div class="daily-summary-item card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h4 class="mb-0"><i class="fas fa-sun me-2"></i>سطوع الشمس</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="actualSunshine" class="form-label">مجموع مدة سطوع الشمس الحقيقي لأقرب عشر الساعة</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="actualSunshine" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل سطوع الشمس الحقيقي بصيغة dd.d">
+                                                    <span class="input-group-text">ساعة</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="totalSunshine" class="form-label">مجموع مدة سطوع الشمس الكلي لأقرب عشر الساعة</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="totalSunshine" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل سطوع الشمس الكلي بصيغة dd.d">
+                                                    <span class="input-group-text">ساعة</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label for="sunshinePercentage" class="form-label">النسبة المئوية للسطوع الحقيقي إلى السطوع الممكن</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="sunshinePercentage" maxlength="3" placeholder="ddd" 
+                                                           pattern="\d{1,3}" title="أدخل النسبة المئوية بصيغة ddd">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 3 (ddd)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- أكبر نفخة -->
+                                <div class="daily-summary-item card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h4 class="mb-0"><i class="fas fa-wind me-2"></i>أكبر نفخة</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="gustSpeed" class="form-label">السرعة متر/ثانية</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="gustSpeed" maxlength="2" placeholder="dd" 
+                                                           pattern="\d{1,2}" title="أدخل سرعة النفخة بصيغة dd">
+                                                    <span class="input-group-text">م/ث</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 2 (dd)</div>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="gustDirection" class="form-label">الاتجاه بعشرات الدرجات من ٠٠ الـ٣٦</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="gustDirection" maxlength="2" placeholder="dd" 
+                                                           pattern="[0-3][0-9]" title="أدخل الاتجاه بصيغة dd (00-36)">
+                                                    <span class="input-group-text">درجة</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 2 (dd)</div>
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="gustTime" class="form-label">وقت حدوثها لأقرب عشر الساعة</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="gustTime" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل وقت الحدوث بصيغة dd.d">
+                                                    <span class="input-group-text">ساعة</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- الرطوبة النسبية -->
+                                <div class="daily-summary-item card mb-4">
+                                    <div class="card-header bg-light">
+                                        <h4 class="mb-0"><i class="fas fa-tint me-2"></i>الرطوبة النسبية</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="maxHumidity" class="form-label">أكبر قيمة</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="maxHumidity" maxlength="3" placeholder="ddd" 
+                                                           pattern="\d{1,3}" title="أدخل أكبر قيمة للرطوبة بصيغة ddd">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 3 (ddd)</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="maxHumidityTime" class="form-label">وقت حدوثها لأقرب عشر الساعة</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="maxHumidityTime" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل وقت الحدوث بصيغة dd.d">
+                                                    <span class="input-group-text">ساعة</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="minHumidity" class="form-label">أصغر قيمة</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="minHumidity" maxlength="2" placeholder="dd" 
+                                                           pattern="\d{1,2}" title="أدخل أصغر قيمة للرطوبة بصيغة dd">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 2 (dd)</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="minHumidityTime" class="form-label">وقت حدوثها لأقرب عشر الساعة</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="minHumidityTime" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل وقت الحدوث بصيغة dd.d">
+                                                    <span class="input-group-text">ساعة</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label for="dewAmount" class="form-label">كمية الندى لأقرب عشر الغرام</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="dewAmount" maxlength="4" placeholder="dd.d" 
+                                                           pattern="\d{1,2}\.\d" title="أدخل كمية الندى بصيغة dd.d">
+                                                    <span class="input-group-text">غ</span>
+                                                </div>
+                                                <div class="input-hint">عدد الخانات: 4 مع الفاصلة (dd.d)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- تأكيد المسؤولية -->
+                        <div class="card mb-4 border-warning">
+                            <div class="card-header bg-warning">
+                                <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>تأكيد المسؤولية</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-3">أقر بأنني قمت بإدخال جميع البيانات بدقة وأتحمل المسؤولية الكاملة عن صحة المعلومات المقدمة. كما أتعهد بأن أي خطأ في البيانات سيكون تحت مسؤوليتي الشخصية.</p>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="dailyResponsibilityCheckbox" required>
+                                    <label class="form-check-label" for="dailyResponsibilityCheckbox">
+                                        أوافق على تحمل المسؤولية الكاملة عن البيانات المدخلة
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- أزرار التحكم -->
+                        <div class="control-buttons d-flex justify-content-center flex-wrap">
+                            <button id="dailySendBtn" class="btn btn-success px-4">
+                                <i class="fas fa-paper-plane me-2"></i>إرسال البيانات
+                            </button>
+                            <button id="dailyDownloadBtn" class="btn btn-purple px-4">
+                                <i class="fas fa-download me-2"></i>تحميل البيانات
+                            </button>
+                            <button id="dailyResetBtn" class="btn btn-danger px-4">
+                                <i class="fas fa-redo me-2"></i>تعيين النموذج
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JS -->
+<script src="script.js"></script>
+<!-- JS للقسم اليومي -->
+<script src="daily.js"></script>
+</body>
+</html>

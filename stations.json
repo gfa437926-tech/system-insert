@@ -1,0 +1,89 @@
+{
+  "stations": [
+    {
+      "code": "LATA0440",
+      "name": "اللاذقية",
+      "elevation": 7
+    },
+    {
+      "code": "KARD1490",
+      "name": "القرداحة",
+      "elevation": 300
+    },
+    {
+      "code": "HMAM0454",
+      "name": "مطار الباسل ـ حميميم",
+      "elevation": 48
+    },
+    {
+      "code": "TART0050",
+      "name": "طرطوس",
+      "elevation": 5
+    },
+    {
+      "code": "SAFI0066",
+      "name": "صافيتا",
+      "elevation": 370
+    },
+    {
+      "code": "BAIT2505",
+      "name": "بيت ياشوط ـ عين قيطة",
+      "elevation": 500
+    },
+    {
+      "code": "KRAI2535",
+      "name": "الكريم ـ بحوث الغاب",
+      "elevation": 174
+    },
+    {
+      "code": "HAMA0558",
+      "name": "حماة الزراعية",
+      "elevation": 316
+    },
+    {
+      "code": "SALM0582",
+      "name": "السلمية",
+      "elevation": 448
+    },
+    {
+      "code": "HOMS0055",
+      "name": "حمص",
+      "elevation": 483
+    },
+    {
+      "code": "DAMA0080",
+      "name": "دمشق الدولي",
+      "elevation": 610
+    },
+    {
+      "code": "SWED0067",
+      "name": "السويداء",
+      "elevation": 1015
+    },
+    {
+      "code": "QUNE0076",
+      "name": "القنيطرة",
+      "elevation": 941
+    },
+    {
+      "code": "AINS2970",
+      "name": "عين العرب الجنوبية",
+      "elevation": 1728
+    },
+    {
+      "code": "ALEP0007",
+      "name": "حلب",
+      "elevation": 393
+    },
+    {
+      "code": "HINH6061",
+      "name": "حينة",
+      "elevation": 1075
+    },
+    {
+      "code": "BNBH6108",
+      "name": "بانياس البحرية",
+      "elevation": 0
+    }
+  ]
+}

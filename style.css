@@ -1,0 +1,88 @@
+/* تخصيصات إضافية للصفحة */
+body {
+    font-family: 'Tahoma', 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.form-switch .form-check-input {
+    width: 3em;
+    margin-left: 0.5em;
+}
+
+h3, h4, h5 {
+    font-weight: 600;
+}
+
+/* تحسين المظهر على الشاشات الصغيرة */
+@media (max-width: 768px) {
+    .input-group-text {
+        min-width: 100px;
+        font-size: 0.85rem;
+    }
+    
+    .weather-element {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* تخصيص الأزرار */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    padding: 0.5rem 2rem;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* تخصيص العناوين */
+.text-primary {
+    color: #0d6efd !important;
+}
+
+/* تخصيص البطاقات */
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+/* تحسين المظهر العام للعناصر */
+.input-group {
+    margin-bottom: 0.5rem;
+}
+
+.weather-elements {
+    padding: 0.5rem 0;
+}
+
+/* تخصيص الأيقونات */
+.fas, .fa {
+    margin-left: 0.5rem;
+}

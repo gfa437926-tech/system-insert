@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الأرصاد الجوية - الإصدار المتكامل</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #0dcaf0;
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .auth-container {
+            max-width: 400px;
+            margin: 2rem auto;
+        }
+        
+        .main-container {
+            display: none;
+        }
+        
+        .station-card {
+            transition: transform 0.3s;
+        }
+        
+        .station-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .user-badge {
+            font-size: 0.85rem;
+        }
+        
+        .admin-panel {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- شاشة المصادقة -->
+    <div id="authScreen" class="auth-container">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <h4 class="mb-0"><i class="fas fa-cloud-sun me-2"></i>نظام الأرصاد الجوية</h4>
+            </div>
+            <div class="card-body p-4">
+                <!-- نموذج تسجيل الدخول -->
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">اسم المستخدم</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">كلمة المرور</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">دخول</button>
+                    <div class="text-center">
+                        <span class="text-primary" id="showRegister" style="cursor: pointer;">إنشاء حساب جديد</span>
+                    </div>
+                </form>
+
+                <!-- نموذج إنشاء حساب -->
+                <form id="registerForm" style="display: none;">
+                    <div class="mb-3">
+                        <label for="newUsername" class="form-label">اسم المستخدم</label>
+                        <input type="text" class="form-control" id="newUsername" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">كلمة المرور</label>
+                        <input type="password" class="form-control" id="newPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">تأكيد كلمة المرور</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userRole" class="form-label">صلاحية المستخدم</label>
+                        <select class="form-select" id="userRole" required>
+                            <option value="observer">مراقب</option>
+                            <option value="supervisor">مشرف</option>
+                            <option value="admin">مدير</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 mb-3">إنشاء حساب</button>
+                    <div class="text-center">
+                        <span class="text-primary" id="showLogin" style="cursor: pointer;">العودة لتسجيل الدخول</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشاشة الرئيسية -->
+    <div id="mainScreen" class="main-container">
+        <!-- شريط التنقل -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-cloud-sun me-2"></i>نظام الأرصاد الجوية
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" id="navHourly">ساعي</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="navDaily">يومي</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="navStations">المحطات</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="navUsers">المستخدمين</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex">
+                        <span class="navbar-text me-3">
+                            <span id="userInfo">مرحباً, </span>
+                            <span class="user-badge badge bg-secondary" id="userRoleBadge">مراقب</span>
+                        </span>
+                        <button class="btn btn-outline-light btn-sm" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt me-1"></i>تسجيل الخروج
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- محتوى الصفحة -->
+        <div class="container mt-4">
+            <!-- قسم الإرسال الساعي -->
+            <div id="hourlySection">
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-clock me-2"></i>الإرسال الساعي</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- نموذج الإرسال الساعي سيتم تحميله هنا -->
+                        <div class="text-center py-4">
+                            <i class="fas fa-spinner fa-spin me-2"></i>جاري تحميل النموذج الساعي...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم الإرسال اليومي -->
+            <div id="dailySection" style="display: none;">
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0"><i class="fas fa-calendar-day me-2"></i>الإرسال اليومي</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- نموذج الإرسال اليومي سيتم تحميله هنا -->
+                        <div class="text-center py-4">
+                            <i class="fas fa-spinner fa-spin me-2"></i>جاري تحميل النموذج اليومي...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم إدارة المحطات (للمشرفين والمديرين) -->
+            <div id="stationsSection" style="display: none;">
+                <div class="card mb-4">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>إدارة المحطات</h5>
+                        <button class="btn btn-sm btn-primary" id="addStationBtn">
+                            <i class="fas fa-plus me-1"></i>إضافة محطة
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="stationsTable">
+                                <thead>
+                                    <tr>
+                                        <th>الرمز</th>
+                                        <th>الاسم</th>
+                                        <th>الارتفاع</th>
+                                        <th>كلمة المرور</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- سيتم ملء الجدول عبر JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم إدارة المستخدمين (للمديرين فقط) -->
+            <div id="usersSection" style="display: none;">
+                <div class="card mb-4">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>إدارة المستخدمين</h5>
+                        <button class="btn btn-sm btn-primary" id="addUserBtn">
+                            <i class="fas fa-plus me-1"></i>إضافة مستخدم
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="usersTable">
+                                <thead>
+                                    <tr>
+                                        <th>اسم المستخدم</th>
+                                        <th>الصلة</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- سيتم ملء الجدول عبر JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة模态 لإضافة محطة -->
+    <div class="modal fade" id="stationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة محطة جديدة</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="stationForm">
+                        <div class="mb-3">
+                            <label for="stationCode" class="form-label">رمز المحطة</label>
+                            <input type="text" class="form-control" id="stationCode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stationName" class="form-label">اسم المحطة</label>
+                            <input type="text" class="form-control" id="stationName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stationElevation" class="form-label">الارتفاع عن سطح البحر (متر)</label>
+                            <input type="number" class="form-control" id="stationElevation" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stationPassword" class="form-label">كلمة مرور المحطة</label>
+                            <input type="password" class="form-control" id="stationPassword" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveStationBtn">حفظ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة模态 لإضافة مستخدم -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مستخدم جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <div class="mb-3">
+                            <label for="modalUsername" class="form-label">اسم المستخدم</label>
+                            <input type="text" class="form-control" id="modalUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalPassword" class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" id="modalPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalRole" class="form-label">الصلة</label>
+                            <select class="form-select" id="modalRole" required>
+                                <option value="observer">مراقب</option>
+                                <option value="supervisor">مشرف</option>
+                                <option value="admin">مدير</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveUserBtn">حفظ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // تهيئة Supabase - تم التحديث
+        const SUPABASE_URL = 'https://quloihkscingxdbsbjcz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1bG9paGtzY2luZ3hkYnNiamN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5MTc1NjksImV4cCI6MjA3MTQ5MzU2OX0.cyko7m6855bjpfVJ7kTNlvWqsTKADxFASgWw_mF_H9c';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // عناصر DOM
+        const authScreen = document.getElementById('authScreen');
+        const mainScreen = document.getElementById('mainScreen');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const userRoleBadge = document.getElementById('userRoleBadge');
+        
+        // عناصر التنقل
+        const navHourly = document.getElementById('navHourly');
+        const navDaily = document.getElementById('navDaily');
+        const navStations = document.getElementById('navStations');
+        const navUsers = document.getElementById('navUsers');
+        
+        // أقسام المحتوى
+        const hourlySection = document.getElementById('hourlySection');
+        const dailySection = document.getElementById('dailySection');
+        const stationsSection = document.getElementById('stationsSection');
+        const usersSection = document.getElementById('usersSection');
+        
+        // بيانات التطبيق
+        let currentUser = null;
+        let userRole = null;
+        
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // التحقق من حالة تسجيل الدخول
+            checkAuthStatus();
+            
+            // إعداد مستمعات الأحداث
+            setupEventListeners();
+        });
+        
+        // إعداد مستمعات الأحداث
+        function setupEventListeners() {
+            // تبديل النماذج
+            showRegister.addEventListener('click', () => {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            });
+            
+            showLogin.addEventListener('click', () => {
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            });
+            
+            // تسجيل الدخول
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                await loginUser(username, password);
+            });
+            
+            // إنشاء حساب
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('newUsername').value;
+                const password = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const role = document.getElementById('userRole').value;
+                
+                if (password !== confirmPassword) {
+                    alert('كلمة المرور غير متطابقة');
+                    return;
+                }
+                
+                await registerUser(username, password, role);
+            });
+            
+            // تسجيل الخروج
+            logoutBtn.addEventListener('click', logout);
+            
+            // التنقل بين الأقسام
+            navHourly.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSection('hourly');
+            });
+            
+            navDaily.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSection('daily');
+            });
+            
+            navStations.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSection('stations');
+            });
+            
+            navUsers.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSection('users');
+            });
+        }
+        
+        // التحقق من حالة المصادقة
+        async function checkAuthStatus() {
+            const loggedIn = localStorage.getItem('loggedIn');
+            const userId = localStorage.getItem('userId');
+            
+            if (loggedIn === 'true' && userId) {
+                // جلب بيانات المستخدم
+                const { data: user, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+                
+                if (user) {
+                    currentUser = user;
+                    userRole = user.role;
+                    showMainScreen();
+                    updateUI();
+                } else {
+                    showAuthScreen();
+                }
+            } else {
+                showAuthScreen();
+            }
+        }
+        
+        // تسجيل الدخول
+        async function loginUser(username, password) {
+            try {
+                // البحث عن المستخدم في قاعدة البيانات
+                const { data: user, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', username)
+                    .eq('password', password) // في التطبيق الحقيقي، يجب استخدام التشفير
+                    .single();
+                
+                if (error) throw error;
+                
+                if (user) {
+                    // حفظ بيانات الجلسة
+                    localStorage.setItem('loggedIn', 'true');
+                    localStorage.setItem('userId', user.id);
+                    localStorage.setItem('username', user.username);
+                    localStorage.setItem('userRole', user.role);
+                    
+                    currentUser = user;
+                    userRole = user.role;
+                    
+                    showMainScreen();
+                    updateUI();
+                } else {
+                    alert('اسم المستخدم أو كلمة المرور غير صحيحة');
+                }
+            } catch (error) {
+                console.error('Error logging in:', error);
+                alert('حدث خطأ أثناء تسجيل الدخول');
+            }
+        }
+        
+        // تسجيل مستخدم جديد
+        async function registerUser(username, password, role) {
+            try {
+                // التحقق من عدم وجود مستخدم بنفس الاسم
+                const { data: existingUser, error: checkError } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', username)
+                    .single();
+                
+                if (existingUser) {
+                    alert('اسم المستخدم موجود مسبقاً');
+                    return;
+                }
+                
+                // إضافة المستخدم الجديد
+                const { data: newUser, error: insertError } = await supabase
+                    .from('users')
+                    .insert([
+                        { 
+                            username: username, 
+                            password: password, // في التطبيق الحقيقي، يجب تشفير كلمة المرور
+                            role: role,
+                            created_at: new Date()
+                        }
+                    ])
+                    .select();
+                
+                if (insertError) throw insertError;
+                
+                alert('تم إنشاء الحساب بنجاح، يمكنك الآن تسجيل الدخول');
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                registerForm.reset();
+            } catch (error) {
+                console.error('Error creating account:', error);
+                alert('حدث خطأ أثناء إنشاء الحساب');
+            }
+        }
+        
+        // تسجيل الخروج
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userRole');
+            
+            currentUser = null;
+            userRole = null;
+            
+            showAuthScreen();
+        }
+        
+        // عرض شاشة المصادقة
+        function showAuthScreen() {
+            authScreen.style.display = 'block';
+            mainScreen.style.display = 'none';
+        }
+        
+        // عرض الشاشة الرئيسية
+        function showMainScreen() {
+            authScreen.style.display = 'none';
+            mainScreen.style.display = 'block';
+            
+            // تحميل البيانات الأولية
+            loadInitialData();
+        }
+        
+        // تحديث واجهة المستخدم بناءً على صلاحيات المستخدم
+        function updateUI() {
+            // تحديث معلومات المستخدم
+            userInfo.textContent = `مرحباً, ${currentUser.username}`;
+            userRoleBadge.textContent = getRoleName(currentUser.role);
+            userRoleBadge.className = `user-badge badge ${getRoleBadgeClass(currentUser.role)}`;
+            
+            // إظهار/إخفاء أقسام حسب الصلاحية
+            if (currentUser.role === 'observer') {
+                navStations.style.display = 'none';
+                navUsers.style.display = 'none';
+            } else if (currentUser.role === 'supervisor') {
+                navUsers.style.display = 'none';
+            }
+            
+            // إظهار القسم الافتراضي
+            showSection('hourly');
+        }
+        
+        // عرض قسم معين
+        function showSection(sectionName) {
+            // إخفاء جميع الأقسام
+            hourlySection.style.display = 'none';
+            dailySection.style.display = 'none';
+            stationsSection.style.display = 'none';
+            usersSection.style.display = 'none';
+            
+            // إلغاء تنشيط جميع أزرار التنقل
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // عرض القسم المحدد وتنشيط زر التنقل
+            switch(sectionName) {
+                case 'hourly':
+                    hourlySection.style.display = 'block';
+                    navHourly.classList.add('active');
+                    loadHourlyForm();
+                    break;
+                case 'daily':
+                    dailySection.style.display = 'block';
+                    navDaily.classList.add('active');
+                    loadDailyForm();
+                    break;
+                case 'stations':
+                    if (currentUser.role !== 'observer') {
+                        stationsSection.style.display = 'block';
+                        navStations.classList.add('active');
+                        loadStations();
+                    }
+                    break;
+                case 'users':
+                    if (currentUser.role === 'admin') {
+                        usersSection.style.display = 'block';
+                        navUsers.classList.add('active');
+                        loadUsers();
+                    }
+                    break;
+            }
+        }
+        
+        // تحميل البيانات الأولية
+        function loadInitialData() {
+            // يمكنك تحميل أي بيانات تحتاجها عند بدء التطبيق هنا
+        }
+        
+        // تحميل نموذج الساعي
+        function loadHourlyForm() {
+            // سيتم تحميل النموذج الساعي هنا
+            const hourlyContent = hourlySection.querySelector('.card-body');
+            hourlyContent.innerHTML = `
+                <form id="hourlyForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="hourlyStation" class="form-label">المحطة</label>
+                            <select class="form-select" id="hourlyStation" required>
+                                <option value="">اختر المحطة</option>
+                                <!-- سيتم ملء الخيارات عبر JavaScript -->
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hourlyDate" class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="hourlyDate" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="hourlyTime" class="form-label">الوقت</label>
+                            <input type="time" class="form-control" id="hourlyTime" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hourlyTemperature" class="form-label">درجة الحرارة (°C)</label>
+                            <input type="number" step="0.1" class="form-control" id="hourlyTemperature" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="hourlyHumidity" class="form-label">الرطوبة النسبية (%)</label>
+                            <input type="number" class="form-control" id="hourlyHumidity" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hourlyPressure" class="form-label">الضغط (hPa)</label>
+                            <input type="number" step="0.1" class="form-control" id="hourlyPressure" required>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>إرسال البيانات الساعية
+                        </button>
+                    </div>
+                </form>
+            `;
+            
+            // إعداد مستمع الحدث للنموذج
+            document.getElementById('hourlyForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await submitHourlyData();
+            });
+            
+            // تحميل قائمة المحطات
+            loadStationsForSelect('hourlyStation');
+        }
+        
+        // تحميل نموذج اليومي
+        function loadDailyForm() {
+            // سيتم تحميل النموذج اليومي هنا
+            const dailyContent = dailySection.querySelector('.card-body');
+            dailyContent.innerHTML = `
+                <form id="dailyForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="dailyStation" class="form-label">المحطة</label>
+                            <select class="form-select" id="dailyStation" required>
+                                <option value="">اختر المحطة</option>
+                                <!-- سيتم ملء الخيارات عبر JavaScript -->
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="dailyDate" class="form-label">التاريخ</label>
+                            <input type="date" class="form-control" id="dailyDate" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="dailyMaxTemp" class="form-label">أقصى درجة حرارة (°C)</label>
+                            <input type="number" step="0.1" class="form-control" id="dailyMaxTemp" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="dailyMinTemp" class="form-label">أدنى درجة حرارة (°C)</label>
+                            <input type="number" step="0.1" class="form-control" id="dailyMinTemp" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="dailyRainfall" class="form-label">هطول الأمطار (mm)</label>
+                            <input type="number" step="0.1" class="form-control" id="dailyRainfall" required>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>إرسال البيانات اليومية
+                        </button>
+                    </div>
+                </form>
+            `;
+            
+            // إعداد مستمع الحدث للنموذج
+            document.getElementById('dailyForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await submitDailyData();
+            });
+            
+            // تحميل قائمة المحطات
+            loadStationsForSelect('dailyStation');
+        }
+        
+        // تحميل المحطات للقائمة المنسدلة
+        async function loadStationsForSelect(selectId) {
+            const { data: stations, error } = await supabase
+                .from('stations')
+                .select('*');
+            
+            if (!error) {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">اختر المحطة</option>';
+                
+                stations.forEach(station => {
+                    const option = document.createElement('option');
+                    option.value = station.id;
+                    option.textContent = `${station.name} (${station.code})`;
+                    select.appendChild(option);
+                });
+            }
+        }
+        
+        // إرسال البيانات الساعية
+        async function submitHourlyData() {
+            const stationId = document.getElementById('hourlyStation').value;
+            const date = document.getElementById('hourlyDate').value;
+            const time = document.getElementById('hourlyTime').value;
+            const temperature = document.getElementById('hourlyTemperature').value;
+            const humidity = document.getElementById('hourlyHumidity').value;
+            const pressure = document.getElementById('hourlyPressure').value;
+            
+            // التحقق من صحة البيانات
+            if (!stationId || !date || !time || !temperature || !humidity || !pressure) {
+                alert('يرجى ملء جميع الحقول');
+                return;
+            }
+            
+            try {
+                // إرسال البيانات إلى Supabase
+                const { data, error } = await supabase
+                    .from('hourly_data')
+                    .insert([
+                        {
+                            station_id: stationId,
+                            date: date,
+                            time: time,
+                            temperature: temperature,
+                            humidity: humidity,
+                            pressure: pressure,
+                            observer_id: currentUser.id,
+                            created_at: new Date()
+                        }
+                    ]);
+                
+                if (error) throw error;
+                
+                alert('تم إرسال البيانات الساعية بنجاح');
+                document.getElementById('hourlyForm').reset();
+            } catch (error) {
+                console.error('Error submitting hourly data:', error);
+                alert('حدث خطأ أثناء إرسال البيانات');
+            }
+        }
+        
+        // إرسال البيانات اليومية
+        async function submitDailyData() {
+            const stationId = document.getElementById('dailyStation').value;
+            const date = document.getElementById('dailyDate').value;
+            const maxTemp = document.getElementById('dailyMaxTemp').value;
+            const minTemp = document.getElementById('dailyMinTemp').value;
+            const rainfall = document.getElementById('dailyRainfall').value;
+            
+            // التحقق من صحة البيانات
+            if (!stationId || !date || !maxTemp || !minTemp || !rainfall) {
+                alert('يرجى ملء جميع الحقول');
+                return;
+            }
+            
+            try {
+                // إرسال البيانات إلى Supabase
+                const { data, error } = await supabase
+                    .from('daily_data')
+                    .insert([
+                        {
+                            station_id: stationId,
+                            date: date,
+                            max_temperature: maxTemp,
+                            min_temperature: minTemp,
+                            rainfall: rainfall,
+                            observer_id: currentUser.id,
+                            created_at: new Date()
+                        }
+                    ]);
+                
+                if (error) throw error;
+                
+                alert('تم إرسال البيانات اليومية بنجاح');
+                document.getElementById('dailyForm').reset();
+            } catch (error) {
+                console.error('Error submitting daily data:', error);
+                alert('حدث خطأ أثناء إرسال البيانات');
+            }
+        }
+        
+        // تحميل المحطات
+        async function loadStations() {
+            try {
+                const { data: stations, error } = await supabase
+                    .from('stations')
+                    .select('*');
+                
+                if (error) throw error;
+                
+                const tbody = document.querySelector('#stationsTable tbody');
+                tbody.innerHTML = '';
+                
+                stations.forEach(station => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${station.code}</td>
+                        <td>${station.name}</td>
+                        <td>${station.elevation} م</td>
+                        <td>••••••</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary edit-station" data-id="${station.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-station" data-id="${station.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                
+                // إضافة مستمعات الأحداث للأزرار
+                document.querySelectorAll('.edit-station').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const stationId = e.target.closest('button').dataset.id;
+                        editStation(stationId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-station').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const stationId = e.target.closest('button').dataset.id;
+                        deleteStation(stationId);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading stations:', error);
+                alert('حدث خطأ أثناء تحميل المحطات');
+            }
+        }
+        
+        // تحميل المستخدمين
+        async function loadUsers() {
+            try {
+                const { data: users, error } = await supabase
+                    .from('users')
+                    .select('*');
+                
+                if (error) throw error;
+                
+                const tbody = document.querySelector('#usersTable tbody');
+                tbody.innerHTML = '';
+                
+                users.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${getRoleName(user.role)}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString('ar-SA')}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary edit-user" data-id="${user.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-user" data-id="${user.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                
+                // إضافة مستمعات الأحداث للأزرار
+                document.querySelectorAll('.edit-user').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const userId = e.target.closest('button').dataset.id;
+                        editUser(userId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-user').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const userId = e.target.closest('button').dataset.id;
+                        deleteUser(userId);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading users:', error);
+                alert('حدث خطأ أثناء تحميل المستخدمين');
+            }
+        }
+        
+        // مساعد: الحصول على اسم الصلاحية
+        function getRoleName(role) {
+            switch(role) {
+                case 'observer': return 'مراقب';
+                case 'supervisor': return 'مشرف';
+                case 'admin': return 'مدير';
+                default: return role;
+            }
+        }
+        
+        // مساعد: الحصول على فئة بادج الصلاحية
+        function getRoleBadgeClass(role) {
+            switch(role) {
+                case 'observer': return 'bg-secondary';
+                case 'supervisor': return 'bg-info';
+                case 'admin': return 'bg-success';
+                default: return 'bg-secondary';
+            }
+        }
+    </script>
+</body>
+</html>
